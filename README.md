@@ -36,12 +36,97 @@ Step 5: **Security Foundation
 The security of RSA relies on the difficulty of factoring large numbers; thus, choosing sufficiently large prime numbers for \( p \) and \( q \) is crucial for security.
 
 ## Program:
+```
+#include <stdio.h>
 
+// Function to calculate GCD
+int gcd(int a, int b)
+{
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
 
+long long powerMod(long long base, long long exp, long long mod)
+{
+    long long result = 1;
 
+    while (exp > 0)
+    {
+        result = (result * base) % mod;
+        exp--;
+    }
+
+    return result;
+}
+
+int modInverse(int e, int phi)
+{
+    int d;
+
+    for (d = 1; d < phi; d++)
+    {
+        if ((e * d) % phi == 1)
+            return d;
+    }
+
+    return -1;
+}
+
+int main()
+{
+    int p = 61;
+    int q = 53;
+
+    int n, phi;
+    int e, d;
+    int message;
+    long long encrypted, decrypted;
+
+    n = p * q;
+
+    phi = (p - 1) * (q - 1);
+    e = 17;
+
+    if (gcd(e, phi) != 1)
+    {
+        printf("Invalid value of e\n");
+        return 0;
+    }
+
+    d = modInverse(e, phi);
+
+    printf("RSA Key Generation\n");
+    printf("------------------\n");
+    printf("p = %d\n", p);
+    printf("q = %d\n", q);
+    printf("n = %d\n", n);
+    printf("phi(n) = %d\n", phi);
+
+    printf("Public Key  = (%d, %d)\n", e, n);
+    printf("Private Key = (%d, %d)\n", d, n);
+
+    printf("\nEnter plaintext (number less than %d): ", n);
+    scanf("%d", &message);
+
+    encrypted = powerMod(message, e, n);
+
+    decrypted = powerMod(encrypted, d, n);
+
+    printf("\nEncrypted message = %lld\n", encrypted);
+    printf("Decrypted message = %lld\n", decrypted);
+
+    return 0;
+}
+```
 
 ## Output:
 
+<img width="1906" height="907" alt="image" src="https://github.com/user-attachments/assets/46933e3d-2a88-4430-867c-d9ae8eecc840" />
 
 
 ## Result:
